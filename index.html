@@ -77,18 +77,14 @@ Access City programs, people and projects helping Portland recover. <strong><a h
             Search
           </span>
         </button>
-      
-                    <div id="cloudy-search" class="cloudy-header__search-wrapper collapse">
-          <div class="d-flex px-4 py-6 px-md-0 py-lg-0 align-items-center">
-            
-      <div class="region region-header-form cloudy-header__search-region">
+
 <!--end prefilled stuff-->
 
 
 
 	<header>
 		<nav>
-			<h1>Temporary Street Use Permitting: Permit Intake</h1>
+			<h1> Temporary Street Use Permitting: Permit Intake</h1>
 		</nav>
 	</header>    <main>
         <section class="pages">
@@ -97,12 +93,18 @@ Access City programs, people and projects helping Portland recover. <strong><a h
                 <h2>Do you already have a Temporary Street Use Permit that you want to Change, Update, or Renew?</h2>
 	<p>            
 		<ul class="tabs"><br><br>
-                <li class="tab">
-                    <a data-switcher data-tab="Change">Yes</a>
+		<li class="tab"><!-- This sets a Parking Selected tracker, taking the applicant down the parking path. -->
+                    <a data-switcher data-tab="LocationBegin" onclick="routeSelected('parking');">I need to use or reserve parking spaces(s)</a>
+                </li> 
+		<li class="tab"><!-- This sets a Parking Selected tracker, taking the applicant down the parking path. -->
+                    <a data-switcher data-tab="LocationBegin" onclick="routeSelected('traffic');">I need to use or close a traffic lane, bike lane, sidewalk, or full street.</a>
                 </li>
-                <li class="tab">
-                    <a data-switcher data-tab="New">No</a>
+		</ul><br>
+		<ul class="tabs">
+		<li class="tab">
+                    <a data-switcher data-tab="Change">I already have a Temporary Street Use Permit that I want to Change, Update, or Renew</a>
                 </li>
+		</ul>
 
 	</p>
 </div>
@@ -127,6 +129,7 @@ Access City programs, people and projects helping Portland recover. <strong><a h
 	</p>
             
 </div>
+
 <div class="page" data-page="Change2">
                 <h2>Please submit a Change Request via the link bellow</h2>
 	<p>            
@@ -157,50 +160,84 @@ Access City programs, people and projects helping Portland recover. <strong><a h
             
 </div>
 
-
-<div class="page" data-page="New">
-                <h2>Which option best describes your situation?</h2>
-	<p>            
-		<ul class="tabs"><br><br>
-		<li class="tab">
-                    <a data-switcher data-tab="LocationBegin" onclick="parkingSelected('true');">I need to use or reserve parking spaces(s)</a>
-                </li>
-		<li class="tab">
-                    <a data-switcher data-tab="LocationBegin" onclick="trafficSelected('true');">I need to use or close a traffic lane, bike lane, sidewalk, or full street.</a>
-                </li>
-		<li class="tab">
-                    <a data-switcher data-tab="Home">Go Back</a>
-                </li>
-
-	</p>
-            
-</div>
-
-
 	<!-- This is substituting in for the assumption of the location picker using the GIS map api to determine metered or not-->
         
 <div class="page" data-page="LocationBegin">
         <h2>Where would this reservation or closure take place?</h2>
 	<p>            
-		<ul class="tabs"><br>(This page is a placeholder as I don't have access to the GIS API to check for Metered/NonMetered, this page would be automated away hopefully.)<br><br>
-	<input name="addresstxt" type="string" maxlength="512" id="addresstxt" class="searchField"/>
+		<ul class="tabs"><br>(This page is a placeholder as I don't have access to the GIS API to check for Metered/NonMetered, this page would do the address verification and also the metered/nonmetered check.)<br><br>
+	<input name="addresstxt" type="string" maxlength="512" id="addresstxt" class="UserEnteredInput"  placeholder="example: 1900 SW 4th Ave"/>
 		<li class="tab">
                     <a data-switcher data-tab="LocationBegin">Begin</a>
                 </li>
 	
 		<li class="tab">
-                    <a data-switcher data-tab="New" onclick="trafficSelected('false');parkingSelected('false');" >Go Back</a>
+                    <a data-switcher data-tab="Home" onclick="routeSelected('null')" >Go Back</a>
                 </li>
 
 	</p>
 		
 	<p><br><br><br>
 		<li class="tab">
-                    <a data-switcher onclick="MeteredChooser();">(API outputs the address is Metered.)</a>
+                    <a data-switcher data-tab="DateRange" onclick="MeteredChooser('true');">(API outputs the address is Metered.)</a>
                 </li>
 		<li class="tab">
-                    <a data-switcher onclick="NonMeteredChooser();">(API outputs the address is Nonmetered.)</a>
+                    <a data-switcher data-tab="DateRange" onclick="MeteredChooser('false');">(API outputs the address is Nonmetered.)</a>
                 </li>
+	</p>
+            
+</div>
+
+
+<div class="page" data-page="DateRange">
+                <h2>How long will you need this request?</h2>
+	<p>            
+		<ul class="tabs">(Here you'd put in a handy dandy calendar tool for calculating dates; 
+			One that factors in the Metered or Nonmetered status and wouldn't allow requests earlier than a factored amount based on that,
+		a date picker that would display the number of days selected, 
+		and this entire page would sorta get automated. Needs to factor in Days of The Week, but that wouldn't apply to Nonmetered, where we bill by week.)
+		</ul>
+		<b>The soonest enforceable start date for your permit would be: <span id="startdateoffset"></span></b>
+		<br><br>Use the slider below to indicate range (for now).
+		</ul>
+		<div class="tab">
+		<input type="range" min="1" max="100" value="1" class="slider" id="sliderange" oninput="slider(value)">
+		</div>
+
+		<ul class ="tabs">
+			<li class="toggle">
+				<a class="toggle" id="mon" onclick="setColor(id);"> <b>Mon </a>
+			</li>
+			<li class="toggle">
+				<a class="toggle" id="tues" onclick="setColor(id);"> Tues </a>
+			</li>
+			<li class="toggle">
+				<a class="toggle" id="wed" onclick="setColor(id);"> Wed </a>
+			</li>
+			<li class="toggle">
+				<a class="toggle" id="thurs" onclick="setColor(id);"> Thurs </a>
+			</li>
+			<li class="toggle">
+				<a class="toggle" id="fri" onclick="setColor(id);"> Fri </a>
+			</li>
+			<li class="toggle">
+				<a class="toggle" id="sat" onclick="setColor(id);"> Sat </a>
+			</li>
+			<li class="toggle">
+				<a class="toggle" id="sun" onclick="setColor(id);"> Sun</b> </a>
+			</li>
+			<br><br>
+			<li class="tab">
+						<a data-switcher onclick="pathDispatcher();">You've requested: <span id="slidervalue"></span> <span id="weekOrDay"></span> of closure.<br>(Really <span id="daystotal"></span> days.)</a>
+			</li>
+			</ul>
+
+	<br>
+		<ul class ="tabs">
+		<li class="tab">
+                    <a data-switcher data-tab="LocationBegin" >Go Back</a>
+        </li>
+		</ul>
 	</p>
             
 </div>
@@ -210,69 +247,275 @@ Access City programs, people and projects helping Portland recover. <strong><a h
                 <h2>How many 20ft spaces will you require?</h2>
 	<p>            
 		<ul class="tabs">(each space is 20ft, all or partial)<br><br>
-	<input name="spacecount" type="string" maxlength="512" id="spacecount" class="searchField"/>
+	<input name="spacecount" type="string" maxlength="512" id="spacecount" class="UserEnteredInput"  placeholder="example: 2" oninput="addSpaces(document.getElementById('spacecount'));"/>
 		<li class="tab">
-                    <a data-switcher data-tab="DateRange" onclick="addSpaces(document.getElementById('spacecount'));">Spaces</a>
-                </li>
-	
+                    <a pbutton onclick="pathDispatcher('parking');">Space(s)</a>
+        </li>
+		Your Estimated permit cost is: $ &nbsp; <span id="spacecostest"></span>
+		</ul><br>
+		<ul class="tabs">
 		<li class="tab">
-                    <a data-switcher data-tab="Home" onclick="trafficSelected('false');parkingSelected('false');" >Go Back</a>
-                </li>
-
+                    <a data-switcher data-tab="LocationBegin" onclick="trafficSelected('false');parkingSelected('false');" >Go Back</a>
+        </li>
+		</ul>
 	</p>
             
 </div>
 
-<div class="page" data-page="DateRange">
-                <h2>How long will you need this request?</h2>
+
+<div class="page" data-page="streetwidth">
+                <h2>Is your street at least 28ft wide?</h2>
 	<p>            
-		<ul class="tabs">(Here you'd put in a handy dandy calendar tool for calculating dates; One that factors in the Metered or Nonmetered status and wouldn't allow requests earlier than a factored amount based on that, a date picker that would display the number of days selected, and this entire page would sorta get automated. Should also include Days of The Week, but that wouldn't apply to Nonmetered.)<br><br>
-		<li class="toggle">
-			<a class="toggle" id="mon" onclick="setColor(id);"> Mon </a>
-		</li>
-		<li class="toggle">
-			<a class="toggle" id="tues" onclick="setColor(id);"> Tues </a>
-		</li>
-		<li class="toggle">
-			<a class="toggle" id="wed" onclick="setColor(id);"> Wed </a>
-		</li>
-		<li class="toggle">
-			<a class="toggle" id="thurs" onclick="setColor(id);"> Thurs </a>
-		</li>
-		<li class="toggle">
-			<a class="toggle" id="fri" onclick="setColor(id);"> Fri </a>
-		</li>
-		<li class="toggle">
-			<a class="toggle" id="sat" onclick="setColor(id);"> Sat </a>
-		</li>
-		<li class="toggle">
-			<a class="toggle" id="sun" onclick="setColor(id);"> Sun </a>
-		</li>
-		<br><br>
+		<ul class="tabs"><br><br>
 		<li class="tab">
-                    <a data-switcher data-tab="Home" onclick="addSpaces(document.getElementById('spacecount'));">(It'd then trigger something on the backend saying,<br><br> More than 7)</a>
-                </li>
-	</p>
-	<br><br>
-	<p>
+                    <a data-switcher onclick="handlerFor7Day('true');">Yes</a>
+        </li> <!-- I don't know if we'd ever be able to automate this. -->
 		<li class="tab">
-                    <a data-switcher data-tab="Home" onclick="trafficSelected('false');parkingSelected('false');">(It'd then trigger something on the backend saying,<br><br> Less than or Equal to 7)</a>
+                    <a data-switcher onclick="handlerFor7Day('false');">No / Unknown</a>
+         </li>
+		<li class="tab">
+                    <a data-switcher data-tab="DateRange">Go Back</a>
                 </li>
+
 	</p>
             
 </div>
+
+
+<div class="page" data-page="7dayParser">
+                <h2>You qualify for our 7 Day Permit, please fill out the bellow info to apply.</h2>
+	<p style="text-align:center;"><b>This permit only allows you to reserve legal parking spaces outside of the <a href="http://pdx.maps.arcgis.com/apps/MapSeries/index.html?appid=ad171d005d4442bba3c640735d070aa3">Metered Parking District</a>. This permit is not valid in the following restricted parking zones: No Parking (all hours or limited hours), Pay To Park, Transit, Car Share.
+<br>
+Here are some example signs you may see in areas where this permit Shall Not Be Used:</b><br>
+
+<img src="https://www.portland.gov/sites/default/files/styles/responsive_extra/public/2022/carshare.jpg" alt="Care Share" width="200" height="300"><img src="https://www.portland.gov/sites/default/files/styles/responsive_extra/public/2022/P1215D.gif" alt="Prohibited-Time Parking" width="200" height="300">
+<img src="https://www.portland.gov/sites/default/files/styles/responsive_extra/public/2022/P3200D.gif" alt="Pay To Park" width="200" height="300"></p>
+<br>
+
+	</p>
+	<p>            
+		<ul class="tabs"><br><br>
+		<li class="tab" id="7day0">
+		What street will you be reserving parking on? &nbsp; &nbsp; 
+		<input name="streetname" type="string" maxlength="512" id="streetname" class="UserEnteredInput"  oninput="typingEffectTimer('streetname', '7day1',);" placeholder="example: SE Division St"/>
+        </li> 
+		</ul>
+		<br>
+		<ul class="tabs">
+		<li class="noshow" id="7day1">
+		Why are you requesting to reserve parking? &nbsp; &nbsp; 
+			<select id="reason" name="reason" onclick="typingEffectTimer('reason','7day2', 'tick');"/>
+				<option disabled selected value> -- What will the space(s) be used for?-- </option>
+				<option value="moving">Moving or Delivery</option>
+				<option value="utility">Utility Work</option>
+				<option value="construction">Construction</option>
+				<option value="maintenance">Property Maintenance</option>
+				<option value="event">Event loading/unloading</option>
+			</select>
+        </li> 
+		</ul>
+
+		<br>
+		<ul class="tabs">
+		<li class="noshow" id="7day2">
+			<label for="7dayrad1">I understand that this permit is NOT valid in <a href="http://pdx.maps.arcgis.com/apps/MapSeries/index.html?appid=ad171d005d4442bba3c640735d070aa3">Metered Parking Districts*</a>&nbsp; &nbsp; </label>
+			<input type="radio" id="7dayrad1" name="7dayrad1" value="yes" onclick="typingEffectTimer('7dayrad1','7day3', 'tick');"/>
+		</li>
+		</ul>
+		
+		<br>
+		<ul class="tabs">
+		<li class="noshow" id="7day3">
+			<label for="7dayrad1">I understand that this permit is not valid on streets less than 28 feet wide.*&nbsp; &nbsp; </label>
+			<input type="radio" id="7dayrad2" name="7dayrad2" value="yes" onclick="typingEffectTimer('7dayrad2','7day4', 'tick');"/>
+		</li>
+		</ul>
+		
+				<br>
+		<ul class="tabs">
+		<li class="noshow" id="7day4">
+			<label for="7dayrad1">I understand that this permit is Non-Refundable*&nbsp; &nbsp; </label>
+			<input type="radio" id="7dayrad3" name="7dayrad3" value="yes" onclick="typingEffectTimer('7dayrad3','7day5', 'tick');"/>
+		</li>
+		</ul>
+		
+				<br>
+		<ul class="tabs">
+		<li class="noshow" id="7day5">
+			<label for="7dayrad1">I understand that this permit is only for moving, utility work, <br>property maintenance, construction, and event loading/unloading.*&nbsp; &nbsp; </label>
+			<input type="radio" id="7dayrad4" name="7dayrad4" value="yes" onclick="typingEffectTimer('7dayrad4','7day6', 'tick');"/>
+		</li>
+		</ul>
+		
+				<br>
+		<ul class="tabs">
+		<li class="noshow" id="7day6">
+			<label for="7dayrad1">I understand that obtaining this permit does not automatically <br>reserve a specific parking space, nor guarantee <br>availability of a space to reserve. I understand that I am responsible <br>for reserving parking spaces by posting the appropriate parking <br>reservation signs and following the <a href="https://www.portland.gov/sites/default/files/2022/non-metered-parking-reservation-overview-brochure.pdf">Parking Enforcement verification procedure.*</a>&nbsp; &nbsp; </label>
+			<input type="radio" id="7dayrad5" name="7dayrad5" value="yes" onclick="typingEffectTimer('7dayrad5','7day7', 'tick');"/>
+		</li>
+		</ul>
+		
+				<br>
+		<ul class="tabs">
+		<li class="noshow" id="7day7">
+			<a data-switcher data-tab="contactinfo" onclick="noshowSwapper('confirm7day');">Next</a>
+		</li>
+		</ul>
+		<br>
+		<ul class="tabs">
+		<li class="tab">
+			<a data-switcher data-tab="streetwidth">Go Back</a>
+        </li>
+		</ul>
+
+	</p>
+            
+</div>
+
+<div class="page" data-page="SimpleParking">
+                <h2>Please fillout the bellow information to apply for a parking reservation.</h2>
+	<p>  This form should be used for parking-only requests. You cannot use this form to request the use or closure of sidewalks, bike/traffic lanes, or streets.
+		<br>
+This form is intended for the temporary reservation of parking to facilitate things like:
+		<ul>
+		<li> Residential moves</li>
+		<li> Commercial moves</li>
+		<li> Loading/unloading for events</li>
+		<li> Short term construction/utility work</li>
+		<li> Tree trimming</li>
+		</ul>
+		<ul class="tabs"><br>
+		<li class="tab" id="simple0">
+		Start and End Time: &nbsp; &nbsp; 
+		<input name="timerange" type="string" maxlength="512" id="timerange" class="UserEnteredInput" placeholder="example: 7am-4pm"/>
+        </li>
+		</ul><br>
+		<ul class="tabs">
+		<li class="tab" id="simple1">
+		Why are you requesting this permit? &nbsp; &nbsp; 
+		<input name="whyrequest" type="string" maxlength="512" id="whyrequest" class="UserEnteredInput" placeholder="example: Moving, Construction, Loading/Unloading."/>
+        </li>		</ul><br>
+		<ul class="tabs">
+		<li class="tab" id="simple2">
+		What will you be parking in the spaces?* &nbsp; &nbsp; 
+			<select id="whatparking" name="whatparking" onchange="choiceHandler(this.value, 'other','simple3');"/>
+				<option disabled selected value> -- NO PASSENGER VEHICLES OR SUVS PERMITTED-- </option>
+				<option value="moving">Moving Van/Truck</option>
+				<option value="utility">Storage Container</option>
+				<option value="construction">Trucks, Material, and Equipment</option>
+				<option value="dropbox">Dropbox / Dumpster</option>
+				<option value="other">other</option>
+			</select>
+		</li> 		</ul><br>
+		<ul class="tabs">
+		<li class="noshow" id="simple3">
+		If other, please specify? &nbsp; &nbsp; 
+		<input name="otherrequest" type="string" maxlength="512" id="otherrequest" class="UserEnteredInput"/>
+        </li>		</ul><br>
+		<ul class="tabs">
+		<li class="tab" id="simple4">
+		Which Street do you wish to reserve parking on? &nbsp; &nbsp; 
+		<input name="streetnameSimp" type="string" maxlength="512" id="streetnameSimp" class="UserEnteredInput" oninput="locationbuilder();" placeholder="example: NW Glisan St"/>
+        </li> 		</ul><br>
+		<ul class="tabs">
+		<li class="tab" id="simple5">
+		Which side of the street? &nbsp; &nbsp; 
+			<select id="streetside" name="streetside" onchange="locationbuilder();"/>
+				<option disabled selected value> -- select One-- </option>
+				<option value="north">North</option>
+				<option value="south">South</option>
+				<option value="east">East</option>
+				<option value="west">West</option>
+				<option value="both">Both Sides</option>
+			</select>        
+		</li>		</ul><br>
+		<ul class="tabs">
+		<li class="tab" id="simple6">
+		If you were standing at the location, facing the street, what would be the nearest cross street on your left? &nbsp; &nbsp; 
+		<input name="crossstreet1" type="string" maxlength="512" id="crossstreet1" class="UserEnteredInput" oninput="typingEffectTimer('crossstreet1', 'simple7',); locationbuilder();" placeholder="example: NW 11th Ave"/>
+        </li> 		</ul><br>
+		<ul class="tabs">
+		<li class="noshow" id="simple7">
+		If you were standing at the location, facing the street, what would be the nearest cross street on your right? &nbsp; &nbsp; 
+		<input name="crossstreet2" type="string" maxlength="512" id="crossstreet2" class="UserEnteredInput" oninput="typingEffectTimer('crossstreet2', 'simple8',); locationbuilder();" placeholder="example: NW 12th Ave"/>
+        </li> 		</ul><br>
+		<ul class="tabs">
+		<li class="noshow" id="simple8">
+		So you want to reserve &nbsp; <b><span id="spaceS"></span> ft</b>&nbsp;  of the &nbsp; <b><span id="streetsideS"></span></b> &nbsp; side of &nbsp; <b><span id="mainstreet"></span></b>, between &nbsp; <b><span id="crstreet1"></span></b> &nbsp; and &nbsp; <b><span id="crstreet2"></span></b> ?
+        </li> 		</ul><br>
+		
+		</ul>
+		<br>
+		<ul class="tabs">
+		<li class="tab">
+                    <a data-switcher data-tab="Spaces">Go Back</a>
+        </li>
+		</ul>
+
+	</p>
+            
+</div>
+
+
+<!-- we collect contact info for everyone so this is setup to be modular-->
+<div class="page" data-page="contactinfo">
+                <h2>Please provide your contact info for this request</h2>
+	<p>            
+		<ul class="tabs"><br><br>
+		<li class="tab" id="contactinfo0">
+		Full Legal Name: &nbsp; &nbsp; 
+		<input name="contactname" type="string" maxlength="512" id="contactname" class="UserEnteredInput" placeholder="example: Jane Smith"/>
+        </li> 
+		</ul>
+		<br>
+		<ul class="tabs">
+		<li class="tab" id="contactinfo1">
+		Company you are making this request on behalf of: &nbsp; &nbsp;  <br>(if necessary)
+		<input name="companyname" type="string" maxlength="512" id="companyname" class="UserEnteredInput" placeholder="example: Bob Builder Construction"/>
+        </li> 
+		</ul>
+		<br>
+		<ul class="tabs">
+		<li class="tab" id="contactinfo2">
+		Best Phone Number to reach you at: &nbsp; &nbsp; 
+		<input name="phonenumber" type="string" maxlength="512" id="phonenumber" class="UserEnteredInput" placeholder="example: 503-823-7365"/>
+        </li> 
+		</ul>
+		<br>
+		<ul class="tabs">
+		<li class="tab" id="contactinfo3">
+		Email Address: &nbsp; &nbsp; <br>(primary communication will be done through email, please check spam folder)
+		<input name="emailcontact" type="string" maxlength="512" id="emailcontact" class="UserEnteredInput" oninput="typingEffectTimer('emailcontact', 'contactinfo4');" placeholder="example: jsmith73@aol.com"/>
+        </li> 
+		</ul>
+		<br>
+		<ul class="tabs">
+		<li class="noshow" id="contactinfo4">
+			<a data-switcher data-tab="confirmationpage">Submit</a></li> 
+		</ul>
+		<br>		
+		<ul class="tabs">
+		<li class="tab">
+			<a data-switcher data-tab="7dayParser">Go Back</a>
+        </li>
+		</ul>
+
+	</p>
+            
+</div>
+
 
 <div class="page" data-page="Traffic">
-                <h2>How many pogos</h2>
+                <h2>Input complex app here</h2>
 	<p>            
 		<ul class="tabs">(each space is 20ft, all or partial)<br><br>
-	<input name="spacecount" type="string" maxlength="512" id="spacecount" class="searchField"/>
+	<input name="spacecount" type="string" maxlength="512" id="spacecount" class="UserEnteredInput" />
 		<li class="tab">
                     <a data-switcher data-tab="LocationBegin" onclick="addSpaces(document.getElementById('spacecount'));">Spaces</a>
                 </li>
 	
 		<li class="tab">
-                    <a data-switcher data-tab="Home" onclick="trafficSelected('false');parkingSelected('false');" >Go Back</a>
+                    <a data-switcher data-tab="Home" onclick="routeSelected('null');" >Go Back</a>
                 </li>
 
 	</p>
@@ -281,13 +524,70 @@ Access City programs, people and projects helping Portland recover. <strong><a h
 
 
 
+<div class="page" data-page="confirmationpage">
+                <h2>Thank you for your submission</h2>
+	<p>            
+		<ul class="tabs"><br><br>
+		<li class="noshow" id="confirm7day">
+			Thank you for submitting a 7 Day Non-Metered Parking Use application. 
+			You will receive an email with your TrackIT Item # and a link to the 
+			online invoice. Once the invoice has been paid, you will be able to 
+			access the PERMIT ID CARD and NO PARKING SIGNS.<br><br>
+
+		<b>**Please help us improve our permitting process by providing feedback here: <a href="https://www.portlandoregon.gov/transportation/index.cfm?action=UpdateItem&category_id=2166&c=40884" target="_blank">Temporary Street Use Permit Feedback Form</a>** </b>
+		</li>
+                    
+		<li class="noshow" id="confirmsimple">
+			Thank you for your request. We will contact you shortly with the price and next steps.<br>
+			To cancel or make changes to your application, please visit www.tsup.info. 
+			We will do our best to accommodate your change request.<br>
+			If you have not heard back from us about this submission within 5 business days, 
+			please first check your SPAM folder, and then contact us at CPAC@portlandoregon.gov
+			or 503-823-7365.<br><br>
+
+			<b>**Please help us improve our permitting process by providing feedback here: <a href="https://www.portlandoregon.gov/transportation/index.cfm?action=UpdateItem&category_id=2166&c=40884" target="_blank">Temporary Street Use Permit Feedback Form</a>** </b>
+        </li>
+		<li class="noshow" id="confirmcomplex">
+                    
+        </li>
+
+
+	</p>
+            
+</div>
+
+
+
+<div class="page" data-page="template">
+                <h2>Which option best describes your situation?</h2>
+	<p>            
+		<ul class="tabs"><br><br>
+		<li class="tab">
+                    <a data-switcher data-tab="LocationBegin" onclick="parkingSelected('true');">I need to use or reserve parking spaces(s)</a>
+                </li> <!-- This sets a Parking Selected tracker, taking the applicant down the parking path. -->
+		<li class="tab">
+                    <a data-switcher data-tab="LocationBegin" onclick="trafficSelected('true');">I need to use or close a traffic lane, bike lane, sidewalk, or full street.</a>
+                </li>
+		<li class="tab"><!-- This sets a Traffic Control selected tracker, taking the applicant down the Traffic path. -->
+                    <a data-switcher data-tab="DateRange">Go Back</a>
+                </li>
+
+	</p>
+            
+</div>
+
 </section>
+<!--
 <div>
-<h><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
+<section>
+<h><br><br><br><br><br><br><br><br>
 ...just displaying info down here for troubleshooting.
 </h>
+</section>
 </div>
+-->
 </body>
 </html>
 
-<!-- influenced from code shared at https://github.com/TylerPottsDev/js-page-switcher -->
+<!-- influenced from code shared at -->

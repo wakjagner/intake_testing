@@ -9,42 +9,52 @@
 /*Main Function Area */
 
 main {
-    padding-left: 142px;
-    padding-right: 142px;
+	display: flex;
+    padding-left: 100px;
 }
 
 .pages {
-    margin-top: 100px;
-    padding: 50px 30px;
+    margin-top: 50px;
+    padding-left: 20px;
     border-radius: 8px;
     background-color: #FFF;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+	white-space: normal;
+
 }
 
 .pages .page {
     display: none;
+
 }
 
 .pages .page.is-active {
-    display: block;
+    display: inline-block;
+	justify-content: space-between;
+	width: 100%;
+	margin-right: -100%;
 }
 
 .pages nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 142px;
-    padding-right: 142px;
+    padding-left: 50px;
     border-radius: 8px;
     background-color: #FFF;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+	white-space: normal;
 }
 
 .pages .tabs .tab {
-    display: inline;
+    display: inline-flex;
     border-radius: 8px;
     background-color: #FFF;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+	white-space: normal;
+}
+.pages .tabs .noshow{
+    display: none;
 }
 
 .pages .tabs .tab a[data-switcher] {
@@ -64,11 +74,25 @@ main {
     background-color: #F7A800;
     font-weight: 700;
 }
+
+.pages .tabs .tab a[pbutton] {
+    display: inline;
+    padding: 15px 30px;
+    text-decoration: none;
+    color: #FFF;
+    background-color: royalblue;
+    cursor: pointer;
+}
+.pages .tabs .tab:hover a[pbutton] {
+    background-color: #F7A800;
+}
+
 .pages .toggle {
     display: inline;
 	background-color: #FFF;
-    border-radius: 8px;
+    border-radius: 9px;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
 }
 .pages .toggle:hover{
     background-color: #F7A800;
